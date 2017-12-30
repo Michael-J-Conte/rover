@@ -1,46 +1,38 @@
 #!/usr/bin/env python
-
 import evdev 
 
-device = evdev.InputDevice("/dev/xbox1")#"/dev/input/event0")
+device = evdev.InputDevice("/dev/xbox1")
 for event in device.read_loop():
-    if event.type == 3: #check to see if event type is an absolute axis event can also use evdev.ecodes.EV_ABS instead of 3
+    if event.type == 3: #check to see if event type is an absolute axis event
         if event.code == 3: 
-            print([event.value, 'right'])
-            
+            print([event.value, 'right analog'])
+        elif event.code == 16:
+            print([event.value, 'D-Pad X'])
+        elif event.code == 17:
+            print([event.value, 'D-Pad Y'])
+        elif event.code == 2:
+            print([event.value, 'left trigger'])
+        elif event.code == 5:
+            print([event.value, 'right trigger'])
         elif event.code == 0:
-            print([event.value, 'left'])
+            print([event.value, 'left analog'])
+    
+    elif event.type == 1:#check to see if event type is a button event
+        if event.code == 307:
+            print([event.value, 'X button'])
+        elif event.code == 308:
+            print([event.value, 'Y button'])
+        elif event.code == 310:
+            print([event.value, 'left bumper'])
+        elif event.code == 311:
+            print([event.value, 'right bumper'])
+        elif event.code == 304:
+            print([event.value, 'A button'])
+        elif event.code == 305:
+            print([event.value, 'B button'])
 
 
 
 
 
 
-
-### changes graveyard ###
-
-
-#from evdev import InputDevice, categorize, ecodes
-#
-#device = InputDevice("/dev/input/event0") 
-#for event in device.read_loop():
-#    #print(event.type)
-#    if event.type == ecodes.EV_ABS:
-#        print(categorize(event))
-#    elif event.type == ecodes.BTN:
-#        print(categorize(event))
-
-
-        
-       # if event.code == 4 and event.value > 0:
-       #     print("-x")
-       # elif event.code == 4 and event.value < 0:
-       #     print("x")
-
-       # elif event.code == 3 and event.value > 0:
-       #     print("-y")
-       # elif event.code == 3 and event.value < 0:
-       #     print("y")
-       # print(evdev.categorize(event))
-       # print(repr(event))
-       # print(event)
