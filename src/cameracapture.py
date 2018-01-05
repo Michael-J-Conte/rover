@@ -42,10 +42,11 @@ def buttoncheck():
 
 device = evdev.InputDevice("/dev/xbox1")
 camera = picamera.PiCamera()
+camera.vflip = True
 for event in device.read_loop():
     button = buttoncheck()
     if button[1] == 'A button':
-        camera.capture('/home/pi/Workspace/Rover/Camera/test2.jpg')
+        camera.capture('/home/pi/Workspace/Rover/Camera/test3.jpg')
 
     
 
