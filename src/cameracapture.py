@@ -45,7 +45,7 @@ camera = picamera.PiCamera()
 for event in device.read_loop():
     button = buttoncheck()
     if button[1] == 'A button':
-        camera.capture('/home/pi/Workspace/Videos/test1.jpg')
+        camera.capture('/home/pi/Workspace/Rover/Camera/test2.jpg')
 
     
 
