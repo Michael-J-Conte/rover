@@ -4,7 +4,7 @@ import evdev
 device = evdev.InputDevice("/dev/xbox1")
 for event in device.read_loop():
     if event.type == 3: #check to see if event type is an absolute axis event
-        if event.code == 3: 
+        if event.code == 4: 
             print([event.value, 'right analog'])
         elif event.code == 16:
             print([event.value, 'D-Pad X'])
@@ -14,7 +14,7 @@ for event in device.read_loop():
             print([event.value, 'left trigger'])
         elif event.code == 5:
             print([event.value, 'right trigger'])
-        elif event.code == 0:
+        elif event.code == 1:
             print([event.value, 'left analog'])
     
     elif event.type == 1:#check to see if event type is a button event

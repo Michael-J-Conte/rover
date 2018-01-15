@@ -1,14 +1,15 @@
 #!/usr/bin/python
+
+### Import Libraries ###
 from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
 import time
 import atexit
 import evdev
 import picamera
 
-# create a default object, no changes to I2C address or frequency
-mh = Adafruit_MotorHAT(addr=0x60)
+mh = Adafruit_MotorHAT(addr=0x60)# create a default object, no changes to I2C address or frequency
 
-# recommended for auto-disabling motors on shutdown!
+### Function Abstractions ###
 def turnOffMotors():
     mh.getMotor(1).run(Adafruit_MotorHAT.RELEASE)
     mh.getMotor(2).run(Adafruit_MotorHAT.RELEASE)
@@ -17,7 +18,7 @@ def turnOffMotors():
 
 def buttoncheck(): 
     if event.type == 3:
-        if event.code == 3:
+        if event.code == 4:
             return [event.value, 'right analog']
         elif event.code == 16:
             return [event.value, 'D-Pad X']
@@ -27,7 +28,7 @@ def buttoncheck():
             return [event.value, 'left trigger']
         elif event.code == 5:
             return [event.value, 'right trigger']
-        elif event.code == 0:
+        elif event.code == 1:
             return [event.value, 'left analog']
         else:
             return ['NaN', 'none']
@@ -49,37 +50,45 @@ def buttoncheck():
             return ['NaN', 'none']
     else:
         return ['NaN', 'none']
-        
 
 
 
-
-
-
+### Main Code ###
 atexit.register(turnOffMotors)
-
-
-################################# DC motor test!
-myMotor = mh.getMotor(2)
-
-# set the speed to start, from 0 (off) to 255 (max speed)
-myMotor.setSpeed(150)
-myMotor.run(Adafruit_MotorHAT.FORWARD);
-# turn on motor
-myMotor.run(Adafruit_MotorHAT.RELEASE);
-
-
+rightmotor = mh.getMotor(2)
+leftmotor = mh.getMotor(3)
 device = evdev.InputDevice("/dev/xbox1")
-
 for event in device.read_loop():
     button = buttoncheck()
-    if button[1] == 'right trigger':
-        myMotor.run(Adafruit_MotorHAT.FORWARD)
-        myMotor.setSpeed(150)
+    if button[1] == 'right analog':
+        if button[0] < 0:
+            rightmotor.run(Adafruit_MotorHAT.FORWARD)
+            rightmotor.setSpeed(150)
+        elif button[0] > 0:
+            rightmotor.run(Adafruit_MotorHAT.BACKWARD)
+            rightmotor.setSpeed(150)
+    elif button[1] == 'left analog':
+        if button[0] < 0:
+            leftmotor.run(Adafruit_MotorHAT.FORWARD)
+            leftmotor.setSpeed(150)
+        elif button[0] > 0:
+            leftmotor.run(Adafruit_MotorHAT.BACKWARD)
+            leftmotor.setSpeed(150)
     elif button[1] == 'left trigger':
-        myMotor.run(Adafruit_MotorHAT.RELEASE)
+        rightmotor.run(Adafruit_MotorHAT.RELEASE)
+        leftmotor.run(Adafruit_MotorHAT.RELEASE)
     elif button[1] == 'B button':
         quit()
+
+
+
+
+
+### Code Graveyard ####
+
+#myMotor.setSpeed(150) # set the speed to start, from 0 (off) to 255 (max speed)
+#myMotor.run(Adafruit_MotorHAT.FORWARD) #turn on motor 
+#myMotor.run(Adafruit_MotorHAT.RELEASE) #turn off motor
 
 #while (True):
 #    print("Forward! ")
